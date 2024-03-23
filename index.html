@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steroid Dosage Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            font-size: 16px; /* Increase default font size */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 18px; /* Increase label font size */
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px; /* Increase input and select padding */
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px; /* Increase input and select font size */
+        }
+
+        button {
+            padding: 12px 24px; /* Increase button padding */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto;
+            font-size: 16px; /* Increase button font size */
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Steroid Dosage Converter</h1>
+        <form id="steroidConverterForm">
+            <label for="dosage">Enter the dosage:</label>
+            <input type="number" id="dosage" name="dosage" step="any" required>
+
+            <label for="currentMedication">Select the current medication:</label>
+            <select id="currentMedication" name="currentMedication" required>
+                <option value="cortisone">Cortisone</option>
+                <option value="hydrocortisone">Hydrocortisone</option>
+                <option value="methylprednisolone">Methylprednisolone</option>
+                <option value="prednisolone">Prednisolone</option>
+                <option value="prednisone">Prednisone</option>
+                <option value="dexamethasone">Dexamethasone</option>
+            </select>
+
+            <button type="button" onclick="convertDosage()">Convert Dosage</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function convertDosage() {
+            var form = document.getElementById("steroidConverterForm");
+            var dosage = parseFloat(form.elements["dosage"].value);
+            var currentMedication = form.elements["currentMedication"].value;
+            var steroidMedications = ["cortisone", "hydrocortisone", "methylprednisolone", "prednisolone", "prednisone", "dexamethasone"];
+            var resultHTML = "<h2>Converted Dosages</h2><ul>";
+
+            steroidMedications.forEach(function(targetMedication) {
+                if (currentMedication !== targetMedication) {
+                    var convertedDosage = dosage * getConversionFactor(currentMedication, targetMedication);
+                    resultHTML += "<li><strong>" + targetMedication.charAt(0).toUpperCase() + targetMedication.slice(1) + ":</strong> " + convertedDosage.toFixed(2) + " mg</li>";
+                }
+            });
+
+            resultHTML += "</ul>";
+            document.getElementById("result").innerHTML = resultHTML;
+        }
+
+        function getConversionFactor(currentMedication, targetMedication) {
+            // Conversion factors for steroid dosages
+            var conversionFactors = {
+                "cortisone": {"hydrocortisone": 20/25, "methylprednisolone": 4/25, "prednisolone": 5/25, "prednisone": 5/25, "dexamethasone": 0.75/25},
+                "hydrocortisone": {"cortisone": 25/20, "methylprednisolone": 4/20, "prednisolone": 5/20, "prednisone": 5/20, "dexamethasone": 0.75/20},
+                "methylprednisolone": {"cortisone": 25/4, "hydrocortisone": 20/4, "prednisolone": 5/4, "prednisone": 5/4, "dexamethasone": 0.75/4},
+                "prednisolone": {"cortisone": 25/5, "hydrocortisone": 20/5, "methylprednisolone": 4/5, "prednisone": 5/5, "dexamethasone": 0.75/5},
+                "prednisone": {"cortisone": 25/5, "hydrocortisone": 20/5, "methylprednisolone": 4/5, "prednisolone": 5/5, "dexamethasone": 0.75/5},
+                "dexamethasone": {"cortisone": 25/0.75, "hydrocortisone": 20/0.75, "methylprednisolone": 4/0.75, "prednisolone": 5/0.75, "prednisone": 5/0.75}
+            };
+
+            return conversionFactors[currentMedication][targetMedication];
+        }
+    </script>
+</body>
+</html>
